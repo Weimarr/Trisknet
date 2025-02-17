@@ -1,16 +1,25 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useToast } from "./use-toast";
+import { useAuth } from "./use-auth";
 
 export function useWebSocket() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const messageQueueRef = useRef<{ type: string; payload: any }[]>([]);
 
   const connect = useCallback(() => {
+    if (!user) {
+      console.log("No user authenticated, skipping WebSocket connection");
+      return null;
+    }
+
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = `${protocol}//${window.location.host}/ws`;
 
     try {
+      console.log("Attempting WebSocket connection...");
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
@@ -20,6 +29,15 @@ export function useWebSocket() {
           clearTimeout(reconnectTimeoutRef.current);
           reconnectTimeoutRef.current = undefined;
         }
+
+        // Send any queued messages
+        while (messageQueueRef.current.length > 0) {
+          const msg = messageQueueRef.current.shift();
+          if (msg) {
+            ws.send(JSON.stringify(msg));
+          }
+        }
+
         toast({
           title: "Connected",
           description: "Successfully connected to chat server",
@@ -48,7 +66,7 @@ export function useWebSocket() {
       console.error("WebSocket connection error:", error);
       return null;
     }
-  }, [toast]);
+  }, [toast, user]);
 
   useEffect(() => {
     const ws = connect();
@@ -64,16 +82,30 @@ export function useWebSocket() {
   }, [connect]);
 
   const sendMessage = useCallback((type: string, payload: any) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ type, payload }));
-    } else {
+    if (!user) {
       toast({
-        title: "Connection Error",
-        description: "Cannot send message. Please try again in a moment.",
+        title: "Authentication Required",
+        description: "Please log in to send messages.",
         variant: "destructive",
       });
+      return;
     }
-  }, [toast]);
+
+    const message = { type, payload };
+
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(message));
+    } else {
+      // Queue message to be sent when connection is established
+      messageQueueRef.current.push(message);
+      toast({
+        title: "Connection Error",
+        description: "Reconnecting to chat server...",
+        variant: "destructive",
+      });
+      connect();
+    }
+  }, [toast, connect, user]);
 
   const subscribe = useCallback((callback: (data: any) => void) => {
     if (!wsRef.current) return;
