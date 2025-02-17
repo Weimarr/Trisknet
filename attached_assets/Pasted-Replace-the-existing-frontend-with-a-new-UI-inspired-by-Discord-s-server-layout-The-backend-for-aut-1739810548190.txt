@@ -1,0 +1,30 @@
+Replace the existing frontend with a new UI inspired by Discord's server layout. The backend for authentication (registration and login) is already built, so focus solely on the frontend. The UI should include the following components and structure:"
+
+1. Left Sidebar (Server Navigation)
+A vertical sidebar displaying the server name at the top.
+Sections for text channels and voice channels, each with a "+" button to add new channels.
+Each text channel should be clickable, leading to its respective chat view.
+Each voice channel should display its status (active/inactive) and allow users to join when clicked.
+2. Main Content Area (Server Overview & Chat)
+If no channel is selected, display a welcome message with introductory options:
+Invite friends
+Customize server with an icon
+Send first message
+Add apps/integrations
+If a text channel is selected, display a chat window with messages, timestamps, and usernames.
+At the bottom, include a chat input field with icons for attachments, GIFs, emojis, and stickers.
+3. Right Sidebar (Member List)
+A list of active and offline members, grouped by status.
+Display usernames, avatars, and special icons (e.g., crown for server owner).
+4. Bottom Left (User Profile & Settings)
+Show the current user’s avatar, username, and status indicator (online, invisible, etc.).
+Include buttons for muting/unmuting mic, deafening/un-deafening audio, and accessing settings.
+5. Top Bar (Global Navigation)
+A search bar for finding messages or users.
+Icons for notifications, pinned messages, member list, and help.
+Tech Stack & Functionality Notes:
+Use React with Tailwind CSS for a clean and modern UI.
+Implement dynamic channel switching with real-time updates using WebSockets.
+Ensure responsive design for desktop and mobile compatibility.
+The chat input should support Markdown formatting and basic message reactions.
+"Create a production-ready frontend that integrates seamlessly with the existing backend. Prioritize performance, accessibility, and user experience."
