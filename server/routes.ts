@@ -25,13 +25,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(newTrade);
   });
 
-  app.get("/api/achievements/:userId", async (req, res) => {
-    const achievements = await storage.getUserAchievements(parseInt(req.params.userId));
-    res.json(achievements);
-  });
-
   app.get("/api/messages/:room", async (req, res) => {
+    if (!req.user) return res.sendStatus(401);
+    console.log(`Fetching messages for room: ${req.params.room}`);
     const messages = await storage.getRoomMessages(req.params.room);
+    console.log(`Found ${messages.length} messages for room ${req.params.room}`);
     res.json(messages);
   });
 
@@ -56,26 +54,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     server: httpServer,
     path: "/ws",
     verifyClient: (info, cb) => {
-      // Accept all connections for now, but you can add authentication here
+      console.log("WebSocket connection attempt", {
+        origin: info.origin,
+        secure: info.secure,
+        headers: info.req.headers,
+      });
+      // Accept all connections in development
       cb(true);
     }
   });
 
   wss.on("connection", (ws) => {
     console.log("New WebSocket connection established");
+    let currentRoom: string | null = null;
 
     ws.on("message", async (message) => {
       try {
         const data = JSON.parse(message.toString());
+        console.log("Received WebSocket message:", data);
 
         if (data.type === "chat") {
-          const msg = insertMessageSchema.parse(data.payload);
+          const { room, content, userId, username } = data.payload;
+          currentRoom = room;
+          console.log(`Processing message for room ${room} from user ${username}`);
+
           const newMessage = await storage.createMessage({
-            ...msg,
+            userId,
+            username,
+            room,
+            content,
             timestamp: new Date(),
           });
 
-          // Broadcast to all connected clients
+          // Broadcast only to clients in the same room
+          console.log(`Broadcasting message to room ${room}`);
           wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
               client.send(JSON.stringify({
@@ -87,7 +99,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } catch (err) {
         console.error("WebSocket message error:", err);
-        // Send error back to client
         ws.send(JSON.stringify({
           type: "error",
           payload: {
@@ -102,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
 
     ws.on("close", () => {
-      console.log("Client disconnected");
+      console.log("Client disconnected", { lastRoom: currentRoom });
     });
   });
 

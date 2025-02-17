@@ -32,6 +32,7 @@ export const achievements = pgTable("achievements", {
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
+  username: text("username").notNull(),
   room: text("room").notNull(),
   content: text("content").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
@@ -48,7 +49,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
-// Modified to accept numbers for quantity and price
 export const insertTradeSchema = z.object({
   symbol: z.string(),
   quantity: z.number(),
@@ -59,6 +59,7 @@ export const insertTradeSchema = z.object({
 export const insertMessageSchema = createInsertSchema(messages).pick({
   room: true,
   content: true,
+  username: true,
 });
 
 export const insertWatchlistSchema = createInsertSchema(watchlist).pick({
