@@ -62,7 +62,7 @@ export default function ChatRoom({ room }: ChatRoomProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 space-y-4">
+      <ScrollArea className="flex-1 space-y-4">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -87,7 +87,7 @@ export default function ChatRoom({ room }: ChatRoomProps) {
           </div>
         ))}
         <div ref={bottomRef} />
-      </div>
+      </ScrollArea>
 
       <div className="flex gap-2 mt-4">
         <Input

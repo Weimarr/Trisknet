@@ -8,19 +8,23 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Trade } from "@shared/schema";
 
+interface TradePanelProps {
+  symbol?: string;
+}
+
 const MOCK_PRICES = {
   "AAPL": 180.5,
   "GOOGL": 140.2,
   "TSLA": 250.8,
   "BTC": 42000,
   "ETH": 2200,
+  "NVDA": 721.2,
 };
 
-export default function TradePanel() {
+export default function TradePanel({ symbol = "AAPL" }: TradePanelProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [symbol, setSymbol] = useState("AAPL");
   const [quantity, setQuantity] = useState("");
 
   const { data: trades } = useQuery<Trade[]>({
@@ -52,7 +56,7 @@ export default function TradePanel() {
   const executeTrade = (type: "buy" | "sell") => {
     const price = MOCK_PRICES[symbol as keyof typeof MOCK_PRICES];
     const qty = parseFloat(quantity);
-    
+
     if (!price || isNaN(qty)) {
       toast({
         title: "Invalid Trade",
@@ -72,29 +76,15 @@ export default function TradePanel() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Symbol</Label>
-          <select
-            className="w-full rounded-md border border-input bg-background px-3 py-2"
-            value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
-          >
-            {Object.keys(MOCK_PRICES).map((sym) => (
-              <option key={sym} value={sym}>{sym}</option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label>Quantity</Label>
-          <Input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            min="0"
-            step="0.01"
-          />
-        </div>
+      <div className="space-y-2">
+        <Label>Quantity</Label>
+        <Input
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          min="0"
+          step="0.01"
+        />
       </div>
 
       <div className="flex gap-2">

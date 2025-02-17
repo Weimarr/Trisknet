@@ -7,9 +7,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function TradeRoom() {
   const { symbol } = useParams();
-  
+
   return (
-    <AppLayout showChannels>
+    <AppLayout showChannels symbol={symbol}>
       <div className="h-full flex flex-col">
         <ScrollArea className="flex-1 p-4">
           <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -19,7 +19,7 @@ export default function TradeRoom() {
                   <CardTitle>Trading {symbol}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <TradePanel initialSymbol={symbol} />
+                  <TradePanel symbol={symbol} />
                 </CardContent>
               </Card>
 
