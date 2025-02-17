@@ -62,34 +62,36 @@ export default function ChatRoom({ room }: ChatRoomProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex items-start gap-3 ${
-              msg.userId === user?.id ? "flex-row-reverse" : ""
-            }`}
-          >
-            <Avatar className="h-8 w-8">
-              <AvatarFallback>
-                {msg.userId.toString().slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+      <ScrollArea className="flex-1">
+        <div className="space-y-4 p-4">
+          {messages.map((msg, index) => (
             <div
-              className={`rounded-lg px-3 py-2 max-w-[80%] ${
-                msg.userId === user?.id
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
+              key={`${msg.id}-${index}`}
+              className={`flex items-start gap-3 ${
+                msg.userId === user?.id ? "flex-row-reverse" : ""
               }`}
             >
-              <p className="text-sm">{msg.content}</p>
+              <Avatar className="h-8 w-8">
+                <AvatarFallback>
+                  {msg.userId.toString().slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div
+                className={`rounded-lg px-3 py-2 max-w-[80%] ${
+                  msg.userId === user?.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted"
+                }`}
+              >
+                <p className="text-sm">{msg.content}</p>
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={bottomRef} />
+          ))}
+          <div ref={bottomRef} />
+        </div>
       </ScrollArea>
 
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-4 p-4 border-t">
         <Input
           value={message}
           onChange={(e) => setMessage(e.target.value)}

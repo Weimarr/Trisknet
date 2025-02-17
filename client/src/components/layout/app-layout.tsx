@@ -43,7 +43,7 @@ const DEMO_CHANNELS = [
 ];
 
 export default function AppLayout({ children, showChannels = false, symbol }: AppLayoutProps) {
-  const { user, logoutMutation } = useAuth();
+  const { user } = useAuth();
   const [, setLocation] = useLocation();
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,29 +181,7 @@ export default function AppLayout({ children, showChannels = false, symbol }: Ap
           </div>
         </div>
         <div className="flex-1 flex">
-          <div className="flex-1">{children}</div>
-
-          {/* Members Sidebar */}
-          <div className="w-60 bg-background/95 backdrop-blur border-l py-4">
-            <div className="px-3 mb-2">
-              <h3 className="text-xs font-semibold text-zinc-400 uppercase">Online — 1</h3>
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-2 px-3 rounded-none h-11"
-            >
-              <div className="relative">
-                <UserCircle2 className="h-7 w-7" />
-                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  {user.username}
-                </span>
-                <span className="text-xs text-muted-foreground">Trading</span>
-              </div>
-            </Button>
-          </div>
+          {children}
         </div>
       </div>
     </div>
