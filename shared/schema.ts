@@ -48,11 +48,12 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
-export const insertTradeSchema = createInsertSchema(trades).pick({
-  symbol: true,
-  quantity: true,
-  price: true,
-  type: true,
+// Modified to accept numbers for quantity and price
+export const insertTradeSchema = z.object({
+  symbol: z.string(),
+  quantity: z.number(),
+  price: z.number(),
+  type: z.string(),
 });
 
 export const insertMessageSchema = createInsertSchema(messages).pick({

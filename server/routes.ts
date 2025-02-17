@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws"; // Add WebSocket import
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             userId: data.userId,
             timestamp: new Date(),
           });
-          
+
           // Broadcast to all clients
           wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {

@@ -22,7 +22,7 @@ export default function HomePage() {
           <div className="flex items-center gap-4">
             <div className="text-sm">
               <span className="text-muted-foreground">Balance:</span>{" "}
-              <span className="font-medium">${user.balance.toFixed(2)}</span>
+              <span className="font-medium">${parseFloat(user.balance).toFixed(2)}</span>
             </div>
             <div className="text-sm">
               <span className="text-muted-foreground">Level:</span>{" "}

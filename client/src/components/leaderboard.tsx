@@ -37,7 +37,7 @@ export default function Leaderboard() {
             </div>
           </div>
           <div className="text-right">
-            <div className="font-medium">${user.balance.toFixed(2)}</div>
+            <div className="font-medium">${parseFloat(user.balance).toFixed(2)}</div>
             <div className="text-sm text-muted-foreground">Balance</div>
           </div>
         </Card>
