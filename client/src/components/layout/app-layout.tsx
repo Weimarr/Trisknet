@@ -17,6 +17,7 @@ import {
   TrendingUp,
   ChevronDown,
 } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -45,6 +46,7 @@ const DEMO_CHANNELS = [
 
 export default function AppLayout({ children, showChannels = false }: AppLayoutProps) {
   const { user, logoutMutation } = useAuth();
+  const [, setLocation] = useLocation();
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -52,7 +54,7 @@ export default function AppLayout({ children, showChannels = false }: AppLayoutP
 
   const filteredResults = searchQuery
     ? DEMO_SEARCH_RESULTS.filter(
-        result => 
+        result =>
           result.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
           result.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
@@ -65,7 +67,10 @@ export default function AppLayout({ children, showChannels = false }: AppLayoutP
         <Button
           className="h-12 w-12 rounded-[24px] bg-zinc-700 hover:bg-primary hover:rounded-[16px] transition-all"
           variant="ghost"
-          onClick={() => setIsSearching(false)}
+          onClick={() => {
+            setIsSearching(false);
+            setLocation("/");
+          }}
         >
           <Home className="h-5 w-5" />
         </Button>
@@ -99,6 +104,11 @@ export default function AppLayout({ children, showChannels = false }: AppLayoutP
                 key={result.symbol}
                 variant="ghost"
                 className="w-full justify-start gap-2 px-3 h-12"
+                onClick={() => {
+                  setLocation(`/room/${result.symbol}`);
+                  setIsSearching(false);
+                  setSearchQuery("");
+                }}
               >
                 <TrendingUp className="h-5 w-5" />
                 <div className="flex flex-col items-start">
@@ -183,7 +193,6 @@ export default function AppLayout({ children, showChannels = false }: AppLayoutP
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         <div className="h-12 border-b flex items-center px-4 gap-4 bg-background/95 backdrop-blur">
-          {/*Removed Hash and general text because it is not needed in this layout*/}
           <div className="ml-auto flex items-center gap-4">
           </div>
         </div>
