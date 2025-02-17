@@ -8,7 +8,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  updateUserBalance(userId: number, newBalance: number): Promise<void>;
+  updateUserBalance(userId: number, newBalance: string): Promise<void>;
   updateUserReputation(userId: number, points: number): Promise<void>;
   addExperience(userId: number, amount: number): Promise<void>;
   
@@ -66,13 +66,13 @@ export class MemStorage implements IStorage {
       reputation: 0,
       level: 1,
       experience: 0,
-      balance: 10000,
+      balance: "10000", 
     };
     this.users.set(id, user);
     return user;
   }
 
-  async updateUserBalance(userId: number, newBalance: number): Promise<void> {
+  async updateUserBalance(userId: number, newBalance: string): Promise<void> {
     const user = await this.getUser(userId);
     if (user) {
       this.users.set(userId, { ...user, balance: newBalance });

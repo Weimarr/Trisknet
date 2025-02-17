@@ -30,11 +30,17 @@ export default function ChatRoom({ room }: ChatRoomProps) {
   }, [initialMessages]);
 
   useEffect(() => {
-    subscribe((data) => {
+    const unsubscribe = subscribe((data) => {
       if (data.type === "chat" && data.payload.room === room) {
         setMessages((prev) => [...prev, data.payload]);
       }
     });
+
+    return () => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, [subscribe, room]);
 
   useEffect(() => {
@@ -60,20 +66,24 @@ export default function ChatRoom({ room }: ChatRoomProps) {
     }
   };
 
+  if (!user) {
+    return <div className="p-4">Please log in to participate in chat.</div>;
+  }
+
   return (
     <div className="flex flex-col h-full">
       <ScrollArea className="flex-1">
         <div className="space-y-4 p-4">
           {messages.map((msg, index) => (
             <div
-              key={`${msg.id}-${index}`}
+              key={index}
               className={`flex items-start gap-3 ${
                 msg.userId === user?.id ? "flex-row-reverse" : ""
               }`}
             >
               <Avatar className="h-8 w-8">
                 <AvatarFallback>
-                  {msg.userId.toString().slice(0, 2).toUpperCase()}
+                  {String(msg.userId).slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div

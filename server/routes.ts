@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { WebSocketServer, WebSocket } from "ws"; // Add WebSocket import
+import { WebSocketServer, WebSocket } from "ws";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -52,21 +52,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+  const wss = new WebSocketServer({ 
+    server: httpServer,
+    path: "/ws",
+    verifyClient: (info, cb) => {
+      // Accept all connections for now, but you can add authentication here
+      cb(true);
+    }
+  });
 
   wss.on("connection", (ws) => {
+    console.log("New WebSocket connection established");
+
     ws.on("message", async (message) => {
       try {
         const data = JSON.parse(message.toString());
+
         if (data.type === "chat") {
           const msg = insertMessageSchema.parse(data.payload);
           const newMessage = await storage.createMessage({
             ...msg,
-            userId: data.userId,
             timestamp: new Date(),
           });
 
-          // Broadcast to all clients
+          // Broadcast to all connected clients
           wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
               client.send(JSON.stringify({
@@ -78,7 +87,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       } catch (err) {
         console.error("WebSocket message error:", err);
+        // Send error back to client
+        ws.send(JSON.stringify({
+          type: "error",
+          payload: {
+            message: "Failed to process message",
+          }
+        }));
       }
+    });
+
+    ws.on("error", (error) => {
+      console.error("WebSocket error:", error);
+    });
+
+    ws.on("close", () => {
+      console.log("Client disconnected");
     });
   });
 
