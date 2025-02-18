@@ -1,0 +1,33 @@
+TRISKNET_OVERSIGHT:
+
+Alright... the chat function works now, with a few bugs. no matter the user, the profile picture is always set to UN in the chat.
+here are some other things that are missing, or are broken:
+When clicking on a different channel, the chat stays the same. The channel doesnt switch, it also says "Chat" above the chat widget, so not only is it hard to differentiate if you are on one channel or the other. Im not sure if switching channel works, while clicking on a different channel works fine, it doesnt change anything on the main page. If I am on general chat, and click on analysis, the messages from general are still in the chatbox.	--- IN FIXING ---
+
+
+
+2. When sending a chat, logging out, registering with a new user, and joining the chatroom, the previous chats are not loaded.
+3. Remove the Trading Widget from the chatrooms and create a whole new trading page with a button to it on the left bar
+4. When in a Chatroom, above where it says "Text Channels", the name of the Chatroom isn't displayed.
+5. On the userlist on the right, also display the users Level and Rep(utation)
+
+MAIN THINGS RN:
+- finish social functionality
+- change the UI to match purple and black color scheme (found on ! DC Chat)
+- make UI look less Discordy
+- finish settings
+- TEST DEPLOY ON LOCALHOST
+
+EXTRA IMPORTANT THINGS TO ADD AFTER SUCCESSFUL OPERATIONAL TEST:
+
+1. Decentralized Social Brokerage: Expand your platform by integrating decentralized finance (DeFi) services using frameworks like DeFiPlex. This would include features like staking, lending/borrowing, decentralized exchanges (DEX), and tokenized trading, all tied into your existing ecosystem. --> https://github.com/sergio11/defiplex_blockchain
+
+2. Hyperliquid-Style Trading Module: Build a high-speed, low-latency trading module for perpetual futures contracts, modeled after Hyperliquid. This would include an order book system, leverage options, risk management tools (e.g., stop-loss, take-profit), and wallet integration. --> https://app.hyperliquid.xyz/trade
+
+-- EXTRAS --
+
+3. Gamification for Advanced Traders: Add gamified elements to the trading module, such as leaderboards, trading competitions, and clan-based challenges, to engage advanced traders and integrate them into your platform’s social ecosystem.
+
+4. AI-Powered Insights for Futures Trading: Use AI to provide sentiment analysis, volatility alerts, and predictive analytics for futures markets, helping users make informed decisions.
+
+5. Educational Tools for Beginners: Include tutorials, guides, and a simulated trading environment to help new users learn about perpetual futures trading and DeFi services.
