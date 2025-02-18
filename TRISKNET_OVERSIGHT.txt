@@ -1,6 +1,6 @@
 TRISKNET_OVERSIGHT:
 
-Alright... the chat function works now, with a few bugs. no matter the user, the profile picture is always set to UN in the chat.
+Alright... the chat function works now, with a few bugs. no matter the user, the profile picture is always displayed as "UN", no matter the user, in the chat.
 here are some other things that are missing, or are broken:
 When clicking on a different channel, the chat stays the same. The channel doesnt switch, it also says "Chat" above the chat widget, so not only is it hard to differentiate if you are on one channel or the other. Im not sure if switching channel works, while clicking on a different channel works fine, it doesnt change anything on the main page. If I am on general chat, and click on analysis, the messages from general are still in the chatbox.	--- IN FIXING ---
 
